@@ -56,6 +56,8 @@ openclaw onboard --install-daemon --non-interactive --accept-risk 2>/dev/null ||
 
 echo "[8/10] Agent config..."
 cp "$SCRIPT_DIR/config/openclaw.json" ~/.openclaw/openclaw.json
+# Set password from env var in config
+sed -i "s/LOGINPASS_PLACEHOLDER/$LOGIN_PASS/g" ~/.openclaw/openclaw.json
 for agent in chief researcher-web researcher-market architect designer developer reviewer security tester; do
   mkdir -p ~/.openclaw/workspace/$agent/memory ~/.openclaw/workspace/$agent/logs
   cp "$SCRIPT_DIR/agents/$agent/SOUL.md" ~/.openclaw/workspace/$agent/SOUL.md
@@ -68,6 +70,20 @@ done
 cp "$SCRIPT_DIR/agents/chief/HEARTBEAT.md" ~/.openclaw/workspace/chief/HEARTBEAT.md
 chmod o+x /root /root/.openclaw
 chmod -R o+rx /root/.openclaw/workspace/
+
+# Patch OpenClaw bug: canSkipDevice doesn't check allowControlUiBypass (Issue #11590)
+GATEWAY_JS=$(find /usr/lib/node_modules/openclaw/dist -name "gateway-cli-*.js" | head -1)
+if [ -n "$GATEWAY_JS" ]; then
+  sed -i 's/const canSkipDevice = sharedAuthOk;/const canSkipDevice = sharedAuthOk || allowControlUiBypass;/' "$GATEWAY_JS"
+  echo "  Patched canSkipDevice bug in $GATEWAY_JS"
+fi
+
+# Patch Control UI: hardcode gateway password so WebSocket auth works automatically
+UI_JS=$(find /usr/lib/node_modules/openclaw/dist/control-ui/assets -name "index-*.js" | head -1)
+if [ -n "$UI_JS" ]; then
+  sed -i "s/this\.password=\"\"/this.password=\"$LOGIN_PASS\"/" "$UI_JS"
+  echo "  Patched Control UI password in $UI_JS"
+fi
 
 echo "[9/10] Skills..."
 npm install -g clawhub@latest
@@ -212,11 +228,11 @@ echo "========================================="
 echo "  Setup Complete!"
 echo "========================================="
 echo ""
-echo "  Landing:  https://$DOMAIN"
-echo "  Team:     https://$DOMAIN/team/"
-echo "  Memory:   https://$DOMAIN/memory/"
-echo "  Desktop:  https://$DOMAIN/desktop/vnc.html"
-echo "  Login:    $LOGIN_USER / $LOGIN_PASS"
+echo "  Dashboard: https://$DOMAIN"
+echo "  Landing:   https://$DOMAIN/home"
+echo "  Memory:    https://$DOMAIN/memory/"
+echo "  Desktop:   https://$DOMAIN/desktop/vnc.html"
+echo "  Login:     $LOGIN_USER / $LOGIN_PASS"
 echo ""
 echo "  9 agents | 32 skills | 24/7 autonomous"
 echo "========================================="

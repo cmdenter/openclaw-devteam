@@ -230,8 +230,8 @@
     "mode": "local",
     "bind": "loopback",
     "auth": {
-      "mode": "token",
-      "token": "b5a4f9cac61e89f6713651a66f78f95be477d1b69f88c663"
+      "mode": "password",
+      "password": "${LOGIN_PASS}"
     },
     "trustedProxies": [
       "127.0.0.1"
@@ -239,6 +239,14 @@
     "tailscale": {
       "mode": "off",
       "resetOnExit": false
+    },
+    "controlUi": {
+      "allowedOrigins": [
+        "https://smartsui.io",
+        "https://www.smartsui.io"
+      ],
+      "allowInsecureAuth": true,
+      "dangerouslyDisableDeviceAuth": true
     }
   },
   "skills": {
