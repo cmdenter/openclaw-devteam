@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.15",
+    "lastTouchedAt": "2026-02-17T12:25:35.585Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-17T11:50:02.236Z",
+    "lastRunVersion": "2026.2.15",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "local"
+  },
+  "models": {
+    "providers": {
+      "chutes": {
+        "baseUrl": "https://llm.chutes.ai/v1",
+        "apiKey": "${CHUTES_API_TOKEN}",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "moonshotai/Kimi-K2-Thinking-TEE",
+            "name": "kimi-k2-thinking",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.4,
+              "output": 1.75
+            },
+            "contextWindow": 131072,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "chutes/kimi-k2-thinking"
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "chief",
+        "workspace": "/root/.openclaw/workspace/chief",
+        "identity": {
+          "name": "Chief",
+          "theme": "decisive project manager",
+          "emoji": "🎯"
+        },
+        "tools": {
+          "allow": [
+            "terminal",
+            "file-editor",
+            "git"
+          ]
+        }
+      },
+      {
+        "id": "researcher-web",
+        "workspace": "/root/.openclaw/workspace/researcher-web",
+        "identity": {
+          "name": "Scout",
+          "theme": "curious web researcher",
+          "emoji": "🔍"
+        },
+        "tools": {
+          "allow": [
+            "browser",
+            "web-search"
+          ]
+        }
+      },
+      {
+        "id": "researcher-market",
+        "workspace": "/root/.openclaw/workspace/researcher-market",
+        "identity": {
+          "name": "Insight",
+          "theme": "analytical market researcher",
+          "emoji": "📊"
+        },
+        "tools": {
+          "allow": [
+            "browser",
+            "web-search",
+            "file-editor"
+          ]
+        }
+      },
+      {
+        "id": "architect",
+        "workspace": "/root/.openclaw/workspace/architect",
+        "identity": {
+          "name": "Arch",
+          "theme": "precise system architect",
+          "emoji": "🏗️"
+        },
+        "tools": {
+          "allow": [
+            "terminal",
+            "file-editor",
+            "git"
+          ]
+        }
+      },
+      {
+        "id": "designer",
+        "workspace": "/root/.openclaw/workspace/designer",
+        "identity": {
+          "name": "Pixel",
+          "theme": "creative UI/UX designer",
+          "emoji": "🎨"
+        },
+        "tools": {
+          "allow": [
+            "browser",
+            "web-search",
+            "file-editor"
+          ]
+        }
+      },
+      {
+        "id": "developer",
+        "workspace": "/root/.openclaw/workspace/developer",
+        "identity": {
+          "name": "Dev",
+          "theme": "methodical developer",
+          "emoji": "⚙️"
+        },
+        "tools": {
+          "allow": [
+            "terminal",
+            "file-editor",
+            "git"
+          ]
+        }
+      },
+      {
+        "id": "reviewer",
+        "workspace": "/root/.openclaw/workspace/reviewer",
+        "identity": {
+          "name": "Critic",
+          "theme": "thorough code reviewer",
+          "emoji": "📝"
+        },
+        "tools": {
+          "allow": [
+            "terminal",
+            "file-editor",
+            "git"
+          ]
+        }
+      },
+      {
+        "id": "security",
+        "workspace": "/root/.openclaw/workspace/security",
+        "identity": {
+          "name": "Guard",
+          "theme": "paranoid security auditor",
+          "emoji": "🛡️"
+        },
+        "tools": {
+          "allow": [
+            "terminal",
+            "web-search",
+            "file-editor",
+            "git"
+          ]
+        }
+      },
+      {
+        "id": "tester",
+        "workspace": "/root/.openclaw/workspace/tester",
+        "identity": {
+          "name": "QA",
+          "theme": "systematic tester",
+          "emoji": "✅"
+        },
+        "tools": {
+          "allow": [
+            "terminal",
+            "file-editor",
+            "git"
+          ]
+        }
+      }
+    ]
+  },
+  "tools": {
+    "agentToAgent": {
+      "enabled": true
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "hooks": {
+    "enabled": true,
+    "path": "/webhooks",
+    "token": "be871a012cbd0258e283ad57301367a191f0fce1985d50cf",
+    "defaultSessionKey": "hook:ingress",
+    "allowRequestSessionKey": false,
+    "allowedAgentIds": [
+      "chief",
+      "researcher-web",
+      "researcher-market",
+      "architect",
+      "designer",
+      "developer",
+      "reviewer",
+      "security",
+      "tester"
+    ]
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "b5a4f9cac61e89f6713651a66f78f95be477d1b69f88c663"
+    },
+    "trustedProxies": [
+      "127.0.0.1"
+    ],
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    },
+    "entries": {
+      "browser": {
+        "enabled": true
+      },
+      "web-search": {
+        "enabled": true
+      },
+      "terminal": {
+        "enabled": true
+      },
+      "file-editor": {
+        "enabled": true
+      }
+    }
+  }
+}
